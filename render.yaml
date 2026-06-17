@@ -2,7 +2,7 @@ services:
   - type: web
     name: oposiciones-api
     runtime: node
-    repo: https://github.com/marcialtg/oposiciones-ia
+    repo: https://github.com/marcialtg/plataforma-oposicionesconIA
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
@@ -35,7 +35,7 @@ services:
   - type: web
     name: oposiciones-web
     runtime: static
-    repo: https://github.com/marcialtg/oposiciones-ia
+    repo: https://github.com/marcialtg/plataforma-oposicionesconIA
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
