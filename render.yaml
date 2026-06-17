@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: oposiciones-api
+    runtime: node
+    repo: https://github.com/marcialtg/oposiciones-ia
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: PORT
+        value: "3001"
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: AI_PROVIDER
+        value: openrouter
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: google/gemini-3-flash-preview
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+
+  - type: web
+    name: oposiciones-web
+    runtime: static
+    repo: https://github.com/marcialtg/oposiciones-ia
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: oposiciones-api
+          envVarKey: RENDER_EXTERNAL_URL
