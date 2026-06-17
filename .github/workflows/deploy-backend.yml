@@ -1,0 +1,29 @@
+name: Deploy Backend to HuggingFace
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Push to HuggingFace Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git clone https://user:${HF_TOKEN}@huggingface.co/spaces/marcialtg/oposiciones-api /tmp/hf-space
+          rsync -av --delete --exclude='node_modules' --exclude='.env' --exclude='*.db*' \
+            backend/ /tmp/hf-space/
+          cd /tmp/hf-space
+          git config user.email "bot@github.com"
+          git config user.name "GitHub Bot"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || \
+            git commit -m "Deploy from GitHub: ${{ github.sha }}"
+          git push --force https://user:${HF_TOKEN}@huggingface.co/spaces/marcialtg/oposiciones-api main
