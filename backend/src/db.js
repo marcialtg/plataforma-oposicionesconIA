@@ -10,6 +10,19 @@ const db = new Database(join(__dirname, '..', 'oposiciones.db'));
 db.pragma('journal_mode = WAL');
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT DEFAULT '',
+    comunidad TEXT DEFAULT '',
+    asignatura TEXT DEFAULT '',
+    cuerpo TEXT DEFAULT '',
+    is_admin INTEGER DEFAULT 0,
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
   CREATE TABLE IF NOT EXISTS temarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,

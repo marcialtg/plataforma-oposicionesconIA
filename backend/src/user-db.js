@@ -1,76 +1,40 @@
-import supabase from './supabase.js';
+import db from './db.js';
 
 export async function findUserByEmail(email) {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single();
-  if (error && error.code !== 'PGRST116') throw error;
-  return data;
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  return user || null;
 }
 
 export async function createUser({ email, password, name, comunidad, asignatura, cuerpo, isAdmin }) {
-  const { data, error } = await supabase
-    .from('users')
-    .insert({
-      email,
-      password,
-      name: name || '',
-      comunidad: comunidad || '',
-      asignatura: asignatura || '',
-      cuerpo: cuerpo || '',
-      is_admin: isAdmin ? 1 : 0,
-      active: 1,
-    })
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const stmt = db.prepare(`
+    INSERT INTO users (email, password, name, comunidad, asignatura, cuerpo, is_admin, active)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+  `);
+  const result = stmt.run(email, password, name || '', comunidad || '', asignatura || '', cuerpo || '', isAdmin ? 1 : 0);
+  return findUserById(result.lastInsertRowid);
 }
 
 export async function findUserById(id) {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', id)
-    .single();
-  if (error && error.code !== 'PGRST116') throw error;
-  return data;
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+  return user || null;
 }
 
 export async function updateUserProfile(id, { name, comunidad, asignatura, cuerpo }) {
-  const { data, error } = await supabase
-    .from('users')
-    .update({ name, comunidad, asignatura, cuerpo })
-    .eq('id', id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  db.prepare(`
+    UPDATE users SET name = ?, comunidad = ?, asignatura = ?, cuerpo = ? WHERE id = ?
+  `).run(name || '', comunidad || '', asignatura || '', cuerpo || '', id);
+  return findUserById(id);
 }
 
 export async function getAllUsers() {
-  const { data, error } = await supabase
-    .from('users')
-    .select('id, email, name, is_admin, active, created_at')
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
+  return db.prepare('SELECT id, email, name, is_admin, active, created_at FROM users ORDER BY created_at DESC').all();
 }
 
 export async function setUserActiveStatus(id, active) {
-  const { error } = await supabase
-    .from('users')
-    .update({ active: active ? 1 : 0 })
-    .eq('id', id);
-  if (error) throw error;
+  db.prepare('UPDATE users SET active = ? WHERE id = ?').run(active ? 1 : 0, id);
 }
 
 export async function getUserCount() {
-  const { count, error } = await supabase
-    .from('users')
-    .select('id', { count: 'exact', head: true });
-  if (error) throw error;
-  return count || 0;
+  const row = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  return row.count;
 }

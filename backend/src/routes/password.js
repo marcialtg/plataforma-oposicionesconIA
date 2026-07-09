@@ -2,8 +2,8 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import supabase from '../supabase.js';
 import db from '../db.js';
+import { findUserByEmail } from '../user-db.js';
 
 const router = Router();
 
@@ -22,13 +22,9 @@ router.post('/forgot', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email es obligatorio' });
 
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('id, email, name')
-      .eq('email', email)
-      .single();
+    const user = await findUserByEmail(email);
 
-    if (error || !user) {
+    if (!user) {
       return res.json({ message: 'Si el email existe, recibirás instrucciones para restablecer tu contraseña.' });
     }
 
@@ -38,7 +34,8 @@ router.post('/forgot', async (req, res) => {
     db.prepare('INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)')
       .run(email, token, expiresAt);
 
-    const resetUrl = `http://localhost:5173/reset-password?token=${token}`;
+    const origin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const resetUrl = `${origin}/reset-password?token=${token}`;
 
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
@@ -80,12 +77,7 @@ router.post('/reset', async (req, res) => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ password: hashedPassword })
-      .eq('email', record.email);
-
-    if (updateError) throw updateError;
+    db.prepare('UPDATE users SET password = ? WHERE email = ?').run(hashedPassword, record.email);
 
     db.prepare('UPDATE password_resets SET used = 1 WHERE id = ?').run(record.id);
 
