@@ -13,7 +13,14 @@ async function request(endpoint, options = {}) {
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
   const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
-  const data = await res.json();
+
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    const text = await res.text();
+    throw new Error(text || 'Error de conexión con el servidor');
+  }
 
   if (!res.ok) throw new Error(data.error || 'Error en la solicitud');
   return data;
