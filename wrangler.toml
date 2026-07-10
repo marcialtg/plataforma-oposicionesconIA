@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "oposiciones-db"
-database_id = ""
+database_id = "a7817dce-1312-4629-938a-dc86c2b7b738"
 
 [env.production]
 vars = { AI_PROVIDER = "openrouter", OPENROUTER_MODEL = "google/gemini-2.0-flash-001" }
