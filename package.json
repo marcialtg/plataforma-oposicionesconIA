@@ -1,0 +1,19 @@
+{
+  "name": "oposiciones-ia",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev -- node_modules -- npm run dev --prefix frontend",
+    "deploy": "wrangler pages deploy frontend/dist --project-name oposiciones-ia",
+    "db:migrate": "wrangler d1 migrations apply oposiciones-db"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "hono": "^4.6.0",
+    "jose": "^5.9.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.80.0"
+  }
+}
