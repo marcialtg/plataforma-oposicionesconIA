@@ -11,7 +11,7 @@ export async function onRequest(context) {
     const secret = new TextEncoder().encode(env.JWT_SECRET || 'oposiciones-ia-secret-key-2024')
     const { payload } = await jwtVerify(token, secret)
 
-    const { results } = await env.DB.prepare('SELECT id, asignatura AS titulo, resultado, created_at FROM supuestos WHERE user_id = ? ORDER BY created_at DESC').bind(payload.userId).all()
+    const { results } = await env.DB.prepare('SELECT id, asignatura, resultado, created_at FROM supuestos WHERE user_id = ? ORDER BY created_at DESC').bind(payload.userId).all()
     return new Response(JSON.stringify(results), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('List supuestos error:', e)

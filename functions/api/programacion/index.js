@@ -12,7 +12,12 @@ export async function onRequest(context) {
     const { payload } = await jwtVerify(token, secret)
 
     const { results } = await env.DB.prepare('SELECT id, datos, contenido, created_at FROM programaciones WHERE user_id = ? ORDER BY created_at DESC').bind(payload.userId).all()
-    return new Response(JSON.stringify(results), { headers: { 'Content-Type': 'application/json' } })
+    const mapped = results.map(r => {
+      let d = {}
+      try { d = JSON.parse(r.datos || '{}') } catch {}
+      return { ...r, curso: d.curso || '', numUnidades: d.numUnidades || '', enfoque: d.enfoque || '' }
+    })
+    return new Response(JSON.stringify(mapped), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('List programaciones error:', e)
     return new Response(JSON.stringify({ error: 'Error al listar programaciones' }), { status: 500, headers: { 'Content-Type': 'application/json' } })

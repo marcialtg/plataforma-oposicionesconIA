@@ -13,17 +13,17 @@ export async function onRequest(context) {
     const { payload } = await jwtVerify(token, secret)
     const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(payload.userId).first()
 
-    const { titulo, curso_escolar, instrucciones } = await request.json()
-    if (!titulo) return new Response(JSON.stringify({ error: 'Título obligatorio' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    const { curso, numUnidades, enfoque, contextoCentro } = await request.json()
+    if (!curso) return new Response(JSON.stringify({ error: 'Curso obligatorio' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
 
     const system = 'Eres un experto en programación didáctica para oposiciones docentes en España.'
-    const prompt = `Contexto: ${user.comunidad} - ${user.cuerpo} - ${user.asignatura}\nTítulo: "${titulo}"\nCurso: ${curso_escolar || '2024-2025'}\nInstrucciones: ${instrucciones || ''}\nGenera una programación didáctica completa y extensa.`
+    const prompt = `Contexto: ${user.comunidad} - ${user.cuerpo} - ${user.asignatura}\nCurso: ${curso}\nNúmero de unidades: ${numUnidades || 12}\nEnfoque: ${enfoque || 'Estándar'}\nContexto del centro: ${contextoCentro || 'No especificado'}\nGenera una programación didáctica completa y detallada.`
 
-    const resultado = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
-    const datos = JSON.stringify({ titulo, curso_escolar: curso_escolar || '2024-2025' })
-    const { meta } = await env.DB.prepare('INSERT INTO programaciones (user_id, datos, contenido, comunidad) VALUES (?, ?, ?, ?)').bind(payload.userId, datos, resultado, user.comunidad || '').run()
+    const contenido = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    const datos = JSON.stringify({ curso, numUnidades: numUnidades || 12, enfoque: enfoque || '', contextoCentro: contextoCentro || '' })
+    const { meta } = await env.DB.prepare('INSERT INTO programaciones (user_id, datos, contenido, comunidad) VALUES (?, ?, ?, ?)').bind(payload.userId, datos, contenido, user.comunidad || '').run()
 
-    return new Response(JSON.stringify({ id: meta.last_row_id, resultado, titulo }), { status: 201, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ id: meta.last_row_id, contenido }), { status: 201, headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Generar programacion error:', e)
     return new Response(JSON.stringify({ error: 'Error al generar programación' }), { status: 500, headers: { 'Content-Type': 'application/json' } })

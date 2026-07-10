@@ -10,18 +10,14 @@ export async function onRequest(context) {
     if (!token) return new Response(JSON.stringify({ error: 'Token requerido' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
 
     const secret = new TextEncoder().encode(env.JWT_SECRET || 'oposiciones-ia-secret-key-2024')
-    await jwtVerify(token, secret)
-
-    const { comunidad, cuerpo, especialidad } = await request.json()
-    if (!comunidad || !cuerpo) return new Response(JSON.stringify({ error: 'Comunidad y cuerpo obligatorios' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    const { payload } = await jwtVerify(token, secret)
+    const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(payload.userId).first()
 
     const system = 'Eres un experto en oposiciones docentes en España.'
-    const prompt = `Indica el formato/estructura oficial de los supuestos prácticos para:\nComunidad: ${comunidad}\nCuerpo: ${cuerpo}\nEspecialidad: ${especialidad || 'No especificada'}\nDevuelve JSON como: { "formato": "...", "duracion": "...", "criterios": "...", "ejemplo": "..." }`
+    const prompt = `Indica el formato/estructura oficial de los supuestos prácticos para:\nComunidad: ${user.comunidad}\nCuerpo: ${user.cuerpo}\nEspecialidad: ${user.asignatura}\nDevuelve SOLO el texto descriptivo del formato, sin JSON.`
 
-    const text = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
-    const match = text.match(/\{[\s\S]*\}/)
-    const parsed = match ? JSON.parse(match[0]) : { formato: '', duracion: '', criterios: '', ejemplo: '' }
-    return new Response(JSON.stringify(parsed), { headers: { 'Content-Type': 'application/json' } })
+    const texto = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    return new Response(JSON.stringify({ texto }), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Formato error:', e)
     return new Response(JSON.stringify({ error: 'Error al obtener el formato' }), { status: 500, headers: { 'Content-Type': 'application/json' } })

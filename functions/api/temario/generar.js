@@ -22,7 +22,7 @@ export async function onRequest(context) {
     const resultado = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
     const { meta } = await env.DB.prepare('INSERT INTO temarios (user_id, titulo, contenido) VALUES (?, ?, ?)').bind(payload.userId, enunciado, resultado).run()
 
-    return new Response(JSON.stringify({ id: meta.last_row_id, resultado, titulo: enunciado }), { status: 201, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ id: meta.last_row_id, contenido: resultado, titulo: enunciado }), { status: 201, headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Generar error:', e)
     return new Response(JSON.stringify({ error: 'Error al generar el tema' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
