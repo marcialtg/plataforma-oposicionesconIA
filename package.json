@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "npm install && cd frontend && npm install && npm run build",
     "dev": "wrangler pages dev -- node_modules -- npm run dev --prefix frontend",
     "deploy": "wrangler pages deploy frontend/dist --project-name oposiciones-ia",
     "db:migrate": "wrangler d1 migrations apply oposiciones-db"
