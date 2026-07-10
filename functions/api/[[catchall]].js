@@ -15,6 +15,32 @@ app.use('*', cors())
 
 app.get('/api/health', (c) => c.json({ status: 'ok', version: '1.0.0' }))
 
+app.get('/api/debug', async (c) => {
+  const info = { env: {}, hasDB: !!c.env.DB }
+  try {
+    if (c.env.DB) {
+      const tables = await c.env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()
+      info.tables = tables.results?.map(t => t.name) || []
+    }
+  } catch (e) {
+    info.dbError = e.message
+  }
+  try {
+    const bc = await import('bcryptjs')
+    const hash = bc.hashSync('test', 10)
+    info.bcrypt = hash ? 'ok' : 'fail'
+  } catch (e) {
+    info.bcryptError = e.message
+  }
+  try {
+    const { SignJWT } = await import('jose')
+    info.jwt = 'ok'
+  } catch (e) {
+    info.jwtError = e.message
+  }
+  return c.json(info)
+})
+
 app.route('/api/auth', authRoutes)
 app.route('/api/temario', temarioRoutes)
 app.route('/api/supuestos', supuestosRoutes)
