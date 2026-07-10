@@ -13,7 +13,7 @@ export async function generateContent(prompt, systemInstruction, apiKey, model) 
         ...(systemInstruction ? [{ role: 'system', content: systemInstruction }] : []),
         { role: 'user', content: prompt },
       ],
-      max_tokens: 4096,
+      max_tokens: 2000,
       temperature: 0.7,
     }),
   })
