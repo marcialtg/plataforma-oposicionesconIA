@@ -20,6 +20,6 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ texto }), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Formato error:', e)
-    return new Response(JSON.stringify({ error: 'Error al obtener el formato' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'Error al obtener el formato', detail: e.message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
