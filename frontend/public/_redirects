@@ -1,2 +1,2 @@
-/api/*    /api/    200
-/*        /index.html   200
+# Las rutas /api/* las manejan las Functions automáticamente
+/*    /index.html   200
