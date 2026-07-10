@@ -19,8 +19,10 @@ export async function generateContent(prompt, systemInstruction, apiKey, model) 
   })
 
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`OpenRouter error (${res.status}): ${text}`)
+    let text = ''
+    try { text = await res.text() } catch (_) { text = '(no body)' }
+    console.error('OpenRouter response not ok:', res.status, res.statusText, text.substring(0, 500))
+    throw new Error(`OpenRouter error (${res.status}): ${text.substring(0, 200)}`)
   }
 
   const data = await res.json()
