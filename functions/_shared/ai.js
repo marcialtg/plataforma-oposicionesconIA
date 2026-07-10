@@ -8,7 +8,7 @@ export async function generateContent(prompt, systemInstruction, apiKey, model) 
       'X-Title': 'Oposita',
     },
     body: JSON.stringify({
-      model: model || 'google/gemini-2.0-flash-001',
+      model: model || 'google/gemini-2.0-flash-exp',
       messages: [
         ...(systemInstruction ? [{ role: 'system', content: systemInstruction }] : []),
         { role: 'user', content: prompt },
@@ -34,5 +34,5 @@ export function getAIKey(env) {
 }
 
 export function getAIModel(env) {
-  return env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-001'
+  return env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-exp'
 }
