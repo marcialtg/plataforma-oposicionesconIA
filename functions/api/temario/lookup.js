@@ -25,6 +25,6 @@ export async function onRequest(context) {
     return new Response(JSON.stringify(parsed), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Lookup error:', e)
-    return new Response(JSON.stringify({ error: 'Error al buscar el tema', detail: e.message, stack: e.stack }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'Error al buscar el tema' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

@@ -26,6 +26,6 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ id: meta.last_row_id, resultado, titulo }), { status: 201, headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Generar programacion error:', e)
-    return new Response(JSON.stringify({ error: 'Error al generar programación', detail: e.message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'Error al generar programación' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
