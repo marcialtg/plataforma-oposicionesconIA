@@ -1,5 +1,5 @@
 import { jwtVerify } from 'jose'
-import { generateContent, getAIKey, getAIModel } from '../../_shared/ai.js'
+import { generateContent, getAIKey, getAIModel, getAIProvider } from '../../_shared/ai.js'
 
 export async function onRequest(context) {
   const { request, env } = context
@@ -18,7 +18,7 @@ export async function onRequest(context) {
     const system = 'Eres un experto preparador de oposiciones docentes en España.'
     const prompt = `Contexto: ${user.comunidad} - ${user.cuerpo} - ${user.asignatura}\nFormato a seguir:\n${formato || 'Formato estándar de supuesto práctico'}\n\nRedacta un supuesto práctico completo siguiendo el formato indicado, con enunciado y solución razonada.`
 
-    const resultado = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    const resultado = await generateContent(prompt, system, getAIKey(env), getAIModel(env), getAIProvider(env))
     const { meta } = await env.DB.prepare('INSERT INTO supuestos (user_id, asignatura, resultado, comunidad) VALUES (?, ?, ?, ?)').bind(payload.userId, 'Supuesto generado', resultado, user.comunidad || '').run()
 
     return new Response(JSON.stringify({ id: meta.last_row_id, resultado }), { status: 201, headers: { 'Content-Type': 'application/json' } })

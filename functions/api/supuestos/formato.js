@@ -1,5 +1,5 @@
 import { jwtVerify } from 'jose'
-import { generateContent, getAIKey, getAIModel } from '../../_shared/ai.js'
+import { generateContent, getAIKey, getAIModel, getAIProvider } from '../../_shared/ai.js'
 
 export async function onRequest(context) {
   const { request, env } = context
@@ -16,7 +16,7 @@ export async function onRequest(context) {
     const system = 'Eres un experto en oposiciones docentes en España.'
     const prompt = `Indica el formato/estructura oficial de los supuestos prácticos para:\nComunidad: ${user.comunidad}\nCuerpo: ${user.cuerpo}\nEspecialidad: ${user.asignatura}\nDevuelve SOLO el texto descriptivo del formato, sin JSON.`
 
-    const texto = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    const texto = await generateContent(prompt, system, getAIKey(env), getAIModel(env), getAIProvider(env))
     return new Response(JSON.stringify({ texto }), { headers: { 'Content-Type': 'application/json' } })
   } catch (e) {
     console.error('Formato error:', e)

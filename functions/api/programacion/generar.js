@@ -1,5 +1,5 @@
 import { jwtVerify } from 'jose'
-import { generateContent, getAIKey, getAIModel } from '../../_shared/ai.js'
+import { generateContent, getAIKey, getAIModel, getAIProvider } from '../../_shared/ai.js'
 
 export async function onRequest(context) {
   const { request, env } = context
@@ -19,7 +19,7 @@ export async function onRequest(context) {
     const system = 'Eres un experto en programación didáctica para oposiciones docentes en España.'
     const prompt = `Contexto: ${user.comunidad} - ${user.cuerpo} - ${user.asignatura}\nCurso: ${curso}\nNúmero de unidades: ${numUnidades || 12}\nEnfoque: ${enfoque || 'Estándar'}\nContexto del centro: ${contextoCentro || 'No especificado'}\nGenera una programación didáctica completa y detallada.`
 
-    const contenido = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    const contenido = await generateContent(prompt, system, getAIKey(env), getAIModel(env), getAIProvider(env))
     const datos = JSON.stringify({ curso, numUnidades: numUnidades || 12, enfoque: enfoque || '', contextoCentro: contextoCentro || '' })
     const { meta } = await env.DB.prepare('INSERT INTO programaciones (user_id, datos, contenido, comunidad) VALUES (?, ?, ?, ?)').bind(payload.userId, datos, contenido, user.comunidad || '').run()
 

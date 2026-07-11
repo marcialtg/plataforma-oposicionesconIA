@@ -1,5 +1,5 @@
 import { jwtVerify } from 'jose'
-import { generateContent, getAIKey, getAIModel } from '../../_shared/ai.js'
+import { generateContent, getAIKey, getAIModel, getAIProvider } from '../../_shared/ai.js'
 
 export async function onRequest(context) {
   const { request, env } = context
@@ -19,7 +19,7 @@ export async function onRequest(context) {
     const system = 'Eres un experto en temarios oficiales de oposiciones docentes en España.'
     const prompt = `Especialidad: ${user.asignatura}\nCuerpo: ${user.cuerpo}\nComunidad: ${user.comunidad}\nConsulta: "${consulta}"\nDevuelve JSON: { "encontrado": true|false, "numero": null|number, "enunciado_oficial": "...", "fuente": "...", "advertencia": "..." }`
 
-    const text = await generateContent(prompt, system, getAIKey(env), getAIModel(env))
+    const text = await generateContent(prompt, system, getAIKey(env), getAIModel(env), getAIProvider(env))
     const match = text.match(/\{[\s\S]*\}/)
     const parsed = match ? JSON.parse(match[0]) : { encontrado: false, numero: null, enunciado_oficial: '', fuente: '', advertencia: 'No se pudo verificar.' }
     return new Response(JSON.stringify(parsed), { headers: { 'Content-Type': 'application/json' } })
