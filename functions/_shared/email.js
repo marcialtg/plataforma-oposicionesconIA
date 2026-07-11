@@ -10,7 +10,7 @@ export async function sendEmail(env, to, subject, html) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Oposita <onboarding@resend.dev>',
+        from: 'Oposita <notificaciones@oposicionesconia.com>',
         to,
         subject,
         html,
