@@ -63,6 +63,7 @@ export const admin = {
   getUsers: () => request('/admin/users'),
   deactivateUser: (id) => request(`/admin/users/${id}/deactivate`, { method: 'POST' }),
   activateUser: (id) => request(`/admin/users/${id}/activate`, { method: 'POST' }),
+  deleteUser: (id) => request(`/admin/users/${id}/delete`, { method: 'DELETE' }),
 };
 
 export const situaciones = {

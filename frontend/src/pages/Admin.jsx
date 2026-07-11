@@ -35,6 +35,16 @@ export default function Admin({ user }) {
     }
   };
 
+  const eliminarUsuario = async (u) => {
+    if (!window.confirm(`¿Eliminar a ${u.name || u.email}? Esta acción no se puede deshacer.`)) return;
+    try {
+      await admin.deleteUser(u.id);
+      await cargarUsuarios();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   if (!user.is_admin) {
     return (
       <div className="bg-red-50 text-red-600 p-6 rounded-xl">
@@ -68,8 +78,9 @@ export default function Admin({ user }) {
                 <th className="text-center px-4 py-3 font-medium text-gray-600">Admin</th>
                 <th className="text-center px-4 py-3 font-medium text-gray-600">Estado</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Registro</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Acción</th>
-              </tr>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Acción</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Eliminar</th>
+                </tr>
             </thead>
             <tbody className="divide-y">
               {users.map((u) => (
@@ -114,6 +125,18 @@ export default function Admin({ user }) {
                         className="text-xs text-green-600 hover:text-green-800 font-medium"
                       >
                         Reactivar
+                      </button>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {u.id === user.id ? (
+                      <span className="text-xs text-gray-400">—</span>
+                    ) : (
+                      <button
+                        onClick={() => eliminarUsuario(u)}
+                        className="text-xs text-red-700 hover:text-red-900 font-semibold"
+                      >
+                        🗑️
                       </button>
                     )}
                   </td>
