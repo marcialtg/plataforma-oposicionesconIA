@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { SignJWT } from 'jose'
+import { notifyNewUser } from '../../_shared/email.js'
 
 async function makeToken(userId, secret) {
   return new SignJWT({ userId })
@@ -52,6 +53,8 @@ export async function onRequest(context) {
 
     const secret = env.JWT_SECRET || 'oposiciones-ia-secret-key-2024'
     const token = await makeToken(meta.last_row_id, secret)
+
+    notifyNewUser(env, { id: meta.last_row_id, email, name, comunidad, asignatura, cuerpo }).catch(() => {})
 
     return new Response(JSON.stringify({
       token,
