@@ -68,13 +68,16 @@ export default function Admin({ user }) {
       {loading ? (
         <div className="text-gray-400 text-center py-8">Cargando usuarios...</div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="bg-white rounded-xl shadow-md overflow-x-auto">
+          <table className="w-full text-sm min-w-[800px]">
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">ID</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Email</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Nombre</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Comunidad</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Cuerpo</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Especialidad</th>
                 <th className="text-center px-4 py-3 font-medium text-gray-600">Admin</th>
                 <th className="text-center px-4 py-3 font-medium text-gray-600">Estado</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Registro</th>
@@ -88,6 +91,9 @@ export default function Admin({ user }) {
                   <td className="px-4 py-3 text-gray-500">{u.id}</td>
                   <td className="px-4 py-3 font-medium">{u.email}</td>
                   <td className="px-4 py-3 text-gray-600">{u.name || '—'}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{u.comunidad || '—'}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{u.cuerpo || '—'}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{u.asignatura || '—'}</td>
                   <td className="px-4 py-3 text-center">
                     {u.is_admin ? (
                       <span className="text-yellow-600">👑</span>
