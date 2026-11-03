@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const NAV = [
+  { to: '/noticias', label: 'Noticias' },
   { to: '/temario', label: 'Temario' },
   { to: '/supuestos', label: 'Supuestos' },
   { to: '/programacion', label: 'Programación' },
@@ -57,12 +58,12 @@ export default function Layout({ children, user, onLogout }) {
         </div>
 
         {user && (
-          <nav className="md:hidden flex items-center justify-around border-t border-gray-200 px-2 py-1 text-xs">
+          <nav className="md:hidden flex items-center justify-around gap-0.5 border-t border-gray-200 px-1 py-1 text-[11px]">
             {NAV.map((n) => {
               const active = location.pathname === n.to;
               return (
                 <Link key={n.to} to={n.to}
-                  className={`rounded-md px-2 py-1.5 ${active ? 'text-primary-700 font-semibold' : 'text-gray-500'}`}>
+                  className={`whitespace-nowrap rounded-md px-1.5 py-1.5 ${active ? 'text-primary-700 font-semibold' : 'text-gray-500'}`}>
                   {n.label}
                 </Link>
               );

@@ -1,0 +1,45 @@
+name: Radar de noticias 2026-2027
+
+# Ejecuta a diario el agente que recopila noticias de oposiciones de
+# educación secundaria para las 17 CCAA + Ceuta y Melilla.
+#
+# Secrets necesarios en el repositorio (Settings → Secrets and variables → Actions):
+#   APP_URL             URL pública de la plataforma (por defecto https://app.oposicionesconia.com)
+#   NEWS_CRON_SECRET    Mismo valor que la variable CRON_SECRET de Cloudflare Pages
+
+on:
+  schedule:
+    # 05:20 UTC = 06:20 en invierno / 07:20 en verano (hora peninsular)
+    - cron: '20 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: radar-noticias
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ejecutar el agente de noticias
+        env:
+          APP_URL: ${{ secrets.APP_URL || 'https://app.oposicionesconia.com' }}
+          NEWS_CRON_SECRET: ${{ secrets.NEWS_CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NEWS_CRON_SECRET:-}" ]; then
+            echo "❌ Falta el secret NEWS_CRON_SECRET"
+            exit 1
+          fi
+
+          echo "🛰️ Lanzando el radar en $APP_URL"
+          for grupo in 1 2 3 4 5 6 7; do
+            echo "→ Grupo $grupo/7"
+            respuesta=$(curl --fail-with-body --silent --show-error --max-time 120 \
+              -X POST "$APP_URL/api/noticias/actualizar?grupo=$grupo" \
+              -H "x-cron-secret: $NEWS_CRON_SECRET" \
+              -H "Content-Type: application/json")
+            echo "$respuesta"
+          done
+
+          echo "✅ Agente completado"

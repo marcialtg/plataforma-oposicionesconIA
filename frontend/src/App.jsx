@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
+import Noticias from './pages/Noticias';
 import Temario from './pages/Temario';
 import Supuestos from './pages/Supuestos';
 import Programacion from './pages/Programacion';
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<ProtectedRoute user={user}><Dashboard user={user} /></ProtectedRoute>} />
+        <Route path="/noticias" element={<ProtectedRoute user={user}><Noticias user={user} /></ProtectedRoute>} />
         <Route path="/temario" element={<ProtectedRoute user={user}><Temario user={user} /></ProtectedRoute>} />
         <Route path="/supuestos" element={<ProtectedRoute user={user}><Supuestos user={user} /></ProtectedRoute>} />
         <Route path="/programacion" element={<ProtectedRoute user={user}><Programacion user={user} /></ProtectedRoute>} />

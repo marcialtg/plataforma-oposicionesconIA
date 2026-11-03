@@ -37,7 +37,7 @@ export default function Temario({ user }) {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ModuleHero eyebrow="Módulo 1" title="Generador de temas"
+      <ModuleHero eyebrow="Módulo 2" title="Generador de temas"
         description="Primero verificamos el enunciado oficial según el temario publicado en el BOE para tu especialidad; después la IA redacta el tema completo." />
 
       {!hasPrefs ? <MissingPrefsNotice /> : (

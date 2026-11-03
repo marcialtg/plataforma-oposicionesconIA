@@ -25,7 +25,7 @@ export default function Programacion({ user }) {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ModuleHero eyebrow="Módulo 3" title="Programación didáctica"
+      <ModuleHero eyebrow="Módulo 4" title="Programación didáctica"
         description="Genera un borrador de programación didáctica ajustado a la normativa LOMLOE y a los decretos vigentes de tu Comunidad Autónoma." />
 
       {!hasPrefs ? <MissingPrefsNotice /> : (

@@ -26,7 +26,7 @@ export default function Situaciones({ user }) {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ModuleHero eyebrow="Módulo 4" title="Situaciones de aprendizaje"
+      <ModuleHero eyebrow="Módulo 5" title="Situaciones de aprendizaje"
         description="A partir de tus pautas, la IA crea un borrador completo de Situación de Aprendizaje competencial, con DUA, secuencia didáctica y rúbrica." />
 
       {!hasPrefs ? <MissingPrefsNotice /> : (

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const MODULES = [
+  { to: '/noticias', icon: '📡', title: 'Radar de noticias', desc: 'Convocatorias, plazas, calendario y novedades de Secundaria 2026-2027, actualizadas cada día para tu comunidad.' },
   { to: '/temario', icon: '📖', title: 'Temario', desc: 'Indica el enunciado y obtén un tema completo, estructurado y con bibliografía, al estilo NotebookLM.' },
   { to: '/supuestos', icon: '✍️', title: 'Supuestos prácticos', desc: 'Genera supuestos al estilo de las convocatorias reales de tu CCAA, con resolución modelo.' },
   { to: '/programacion', icon: '📋', title: 'Programación didáctica', desc: 'Borrador de programación ajustado a la normativa LOMLOE y a tu Comunidad Autónoma.' },
@@ -32,7 +33,8 @@ export default function Dashboard({ user }) {
           </h1>
           <p className="mt-4 max-w-2xl text-white/80">
             Temarios, supuestos prácticos, programaciones didácticas y situaciones de aprendizaje
-            generados al instante y adaptados a la normativa de tu Comunidad Autónoma.
+            generados al instante, más un radar diario de convocatorias de Secundaria 2026-2027
+            adaptado a tu Comunidad Autónoma.
           </p>
           {hasPrefs && (
             <div className="mt-6 flex flex-wrap gap-2">
@@ -44,11 +46,11 @@ export default function Dashboard({ user }) {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold text-gray-800">Cuatro herramientas, una sola plataforma</h2>
-        <p className="mt-1 text-gray-500">Elige el módulo que necesites para avanzar hoy.</p>
+        <h2 className="text-2xl font-bold text-gray-800">Cinco herramientas, una sola plataforma</h2>
+        <p className="mt-1 text-gray-500">Empieza por las noticias de tu comunidad o elige el módulo que necesites para avanzar hoy.</p>
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           {MODULES.map((m, i) => (
-            <Link key={m.to} to={hasPrefs ? m.to : '/perfil'}
+            <Link key={m.to} to={m.to === '/noticias' || hasPrefs ? m.to : '/perfil'}
               className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center text-2xl">{m.icon}</div>

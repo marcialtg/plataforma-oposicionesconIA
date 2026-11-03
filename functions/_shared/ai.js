@@ -48,13 +48,13 @@ export async function generateContent(prompt, systemInstruction, apiKey, model, 
 
 export function getAIKey(env) {
   const provider = env.AI_PROVIDER || 'openrouter'
-  if (provider === 'google') return env.GOOGLE_API_KEY || ''
+  if (provider === 'google') return env.GOOGLE_API_KEY || env.GEMINI_API_KEY || ''
   return env.OPENROUTER_API_KEY || ''
 }
 
 export function getAIModel(env) {
   const provider = env.AI_PROVIDER || 'openrouter'
-  if (provider === 'google') return env.GOOGLE_MODEL || 'gemini-2.5-flash'
+  if (provider === 'google') return env.GOOGLE_MODEL || env.GEMINI_MODEL || 'gemini-2.5-flash'
   return env.OPENROUTER_MODEL || 'google/gemini-2.5-flash'
 }
 

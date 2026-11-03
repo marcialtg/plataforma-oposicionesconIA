@@ -72,3 +72,20 @@ export const situaciones = {
   listar: () => request('/situaciones'),
   obtener: (id) => request(`/situaciones/${id}`),
 };
+
+export const noticias = {
+  listar: (params = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') query.set(key, value);
+    });
+    const qs = query.toString();
+    return request(`/noticias${qs ? `?${qs}` : ''}`);
+  },
+  actualizar: (params = {}) => {
+    const query = new URLSearchParams();
+    if (params.grupo) query.set('grupo', params.grupo);
+    const qs = query.toString();
+    return request(`/noticias/actualizar${qs ? `?${qs}` : ''}`, { method: 'POST' });
+  },
+};

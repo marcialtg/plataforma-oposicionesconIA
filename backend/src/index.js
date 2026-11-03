@@ -8,6 +8,7 @@ import programacionRoutes from './routes/programacion.js';
 import situacionesRoutes from './routes/situaciones.js';
 import adminRoutes from './routes/admin.js';
 import passwordRoutes from './routes/password.js';
+import noticiasRoutes from './routes/noticias.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,7 @@ app.use('/api/programacion', programacionRoutes);
 app.use('/api/situaciones', situacionesRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/password', passwordRoutes);
+app.use('/api/noticias', noticiasRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', version: '1.0.0' });

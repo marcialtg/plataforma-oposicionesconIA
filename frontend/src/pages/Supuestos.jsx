@@ -32,7 +32,7 @@ export default function Supuestos({ user }) {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ModuleHero eyebrow="Módulo 2" title="Supuestos prácticos"
+      <ModuleHero eyebrow="Módulo 3" title="Supuestos prácticos"
         description="Descubre cómo es el supuesto práctico en tu Comunidad Autónoma y genera, con un solo clic, un modelo realista con su resolución." />
 
       {!hasPrefs ? <MissingPrefsNotice /> : (
