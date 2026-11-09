@@ -20,7 +20,7 @@ export const ESPECIALIDADES = [
   'Tecnología', 'Informática', 'Educación Física', 'Música', 'Filosofía',
   'Economía', 'Dibujo / Artes Plásticas', 'Pedagogía Terapéutica',
   'Audición y Lenguaje', 'Educación Infantil', 'Educación Primaria',
-  'Orientación Educativa'
+  'Orientación Educativa', 'Latín y Griego'
 ];
 
 export const CURSO_OPOSICIONES = '2026-2027';
